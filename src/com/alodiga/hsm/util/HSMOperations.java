@@ -9,6 +9,7 @@ import com.alodiga.hsm.OmniCryptoCommand;
 import com.alodiga.hsm.ThalesCryptoCommand;
 import com.alodiga.hsm.UnpackThalesCryptoCommand;
 import com.alodiga.hsm.exception.NotConnectionHSMException;
+import com.alodiga.hsm.response.GenerateCVVResponse;
 import com.alodiga.hsm.response.GenerateKeyResponse;
 import com.alodiga.hsm.response.GenericResponse;
 import com.alodiga.hsm.response.HSMStatusResponse;
@@ -31,6 +32,70 @@ public class HSMOperations {
             return new GenerateKeyResponse(Constant.KEY_NOT_SUPPORT, Constant.KEY_NOT_SUPPORT_MESSAGE);
 	} 
     }
+    
+    public static GenerateKeyResponse generateSingleKVC() throws Exception {
+    	String requestMessage = "";
+    	String responseMessage = "";
+    	requestMessage = CryptoConnection.sendAndReceiveToHSM(ThalesCryptoCommand.generateKVC());
+    	responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
+    	return new GenerateKeyResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage,"Single");		
+     }
+    
+
+    /**
+     *@author kerwin Gomez
+     *@param CVK o KVC: parametro con la lleve generado y almacenado previamente por la plataforma
+     *@param Pan:Numero de Tarjeta
+     *@param EndingDate:Fecha de vencimiento de la tarjeta en Formato YYMM
+     *@param ServicesCode
+     *@return retorna el cvv  de la tarjeta dependiendo del service code o el cvv que se va a validar
+     *  //ICVV EMVchip 999, CVV2 Pintado Atras 000, CVV1 201 Banda de la tarjeta  Field 22
+
+		SubField1 
+
+		PAN entry mode (positions 1 - 2)
+		00 – Unknown
+		01 – Manual (i.e keypad)
+		02 – Magnetic Stripe (possibly constructed manually, CVV may be checked)
+		03 – Barcode
+		04 – OCR
+		05 – ICC (CVV may be checked)
+		07 – Auto - entry via contactless ICC
+		90 – Magnetic strip as read from track 2
+		91 – Auto - entry via contactless magnetic stripe
+		95 – ICC (CVV may not be checked)
+		This Value intro field 35
+     *    
+     */
+    
+    public static GenerateCVVResponse generateCVV(String cvk,String pan,String endingDate,String serviceCode) throws Exception {
+    	String requestMessage = "";
+    	String responseMessage = "";
+    	requestMessage = CryptoConnection.sendAndReceiveToHSM(ThalesCryptoCommand.generateCVV(cvk,pan,endingDate,serviceCode));
+    	responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
+    	return new GenerateCVVResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage, "Single");		  
+    }
+    
+    
+    
+    /**
+     *@author kerwin Gomez
+     *@return retorna una llave conpuesta por la concatenación de 2 llaves CVK simples 
+     */
+    public static GenerateKeyResponse generateDoubleKVC() throws Exception {
+    	GenerateKeyResponse response1 = new GenerateKeyResponse();
+    	response1 = HSMOperations.generateSingleKVC();
+    	GenerateKeyResponse response2 = new GenerateKeyResponse();
+    	response2 = HSMOperations.generateSingleKVC();
+    	GenerateKeyResponse responseComplete= new GenerateKeyResponse();
+    	responseComplete.setVerificationDigit(response2.getVerificationDigit());
+    	responseComplete.setKeyValue(response1.getKeyValue()+response2.getKeyValue());
+    	responseComplete.setResponseCode(Constant.SUCCESS);
+    	responseComplete.setHeader(response2.getHeader());
+    	responseComplete.setResponseMessage(response2.getResponseMessage());
+    	return responseComplete;		
+     }
+    
     
     private static void GenerateaKeyCheckValue(String kek){
         StringBuilder requestHSM = new StringBuilder();

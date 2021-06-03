@@ -1,38 +1,17 @@
-/*     */ package com.alodiga.hsm;
-/*     */ import java.io.BufferedInputStream;
-		   import java.util.logging.*;
-/*     */ import java.io.BufferedOutputStream;
-/*     */ import java.io.DataInputStream;
-/*     */ import java.io.DataOutputStream;
-/*     */ import java.io.File;
-/*     */ import java.io.FileOutputStream;
-/*     */ import java.io.PrintStream;
-/*     */ import java.net.Socket;
-/*     */ import java.text.SimpleDateFormat;
-/*     */ import java.util.Date;
-
+package com.alodiga.hsm;
+import java.io.BufferedInputStream;
+import java.util.logging.*;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import com.alodiga.hsm.exception.NotConnectionHSMException;
-import com.alodiga.hsm.operations.UseParameters;
-import com.alodiga.hsm.operations.UseParameters.HsmConfig;
-import com.alodiga.hsm.operations.UseParameters.TypeHSM;
+import com.alodiga.hsm.util.Constant;
 import com.alodiga.hsm.util.ConstantResponse;
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
 /*     */ 
 /*     */ public class CryptoConnection
 /*     */ {
@@ -48,8 +27,8 @@ import com.alodiga.hsm.util.ConstantResponse;
 /*     */   
 /*     */   public static void connectHsm() {
 /*     */     try {
-/*  48 */       UseParameters.getHSMConfig();
-/*  49 */       hsm_socket = new Socket(UseParameters.HsmConfig.iphsmCon(), UseParameters.HsmConfig.porthsmCon());
+
+/*  49 */       hsm_socket = new Socket(Constant.IP_HSM, Constant.PORT_HSM);
 /*     */       
 /*  51 */       if (hsm_socket.isConnected()) {
 /*  52 */         System.out.println("Connection Established: " + iphsm + " On Port : " + porthsm);
@@ -80,31 +59,31 @@ import com.alodiga.hsm.util.ConstantResponse;
 /*     */     {
 				Logger.getLogger (CryptoConnection.class.getName()).log(Level.INFO, "entro");
 	
-/*  78 */       UseParameters.getHSMConfig();
+
 				Logger.getLogger (CryptoConnection.class.getName()).log(Level.INFO, "obtiene configuracion");
 /*  79 */       requestData = message;
 /*  80 */       System.out.println("TEST MESSAGE :" + message);
-/*  81 */       System.out.println(UseParameters.HsmConfig.iphsmCon());
-/*  82 */       System.out.println(UseParameters.HsmConfig.porthsmCon());
-				Logger.getLogger (CryptoConnection.class.getName()).log(Level.INFO, "ip:"+UseParameters.HsmConfig.iphsmCon()+"port:"+UseParameters.HsmConfig.porthsmCon());
+/*  81 */       System.out.println(Constant.IP_HSM);
+/*  82 */       System.out.println(Constant.PORT_HSM);
+				Logger.getLogger (CryptoConnection.class.getName()).log(Level.INFO, "ip:"+Constant.IP_HSM+"port:"+Constant.PORT_HSM);
 
-/*  83 */       hsm_socket = new Socket(UseParameters.HsmConfig.iphsmCon(), UseParameters.HsmConfig.porthsmCon());
-/*  78 */       UseParameters.getHSMConfig();
+/*  83 */       hsm_socket = new Socket(Constant.IP_HSM, Constant.PORT_HSM);
+
 /*  79 */       requestData = message;
 /*  88 */       DataOutputStream output = new DataOutputStream(new BufferedOutputStream(hsm_socket.getOutputStream()));
 /*  89 */       DataInputStream inFromHsm = new DataInputStream(new BufferedInputStream(hsm_socket.getInputStream()));
 /*     */       
 /*     */ 
-/*  92 */       UseParameters.getTypeHsm();
+/*  92 */       
 /*  93 */       int lenghtchar = requestData.length();
 /*  94 */       System.out.println("0");
-/*  95 */       if (UseParameters.TypeHSM.typeHsm().equals("Thales")) {
+/*  95 */       if (Constant.TYPE_HSM.equals("Thales")) {
 /*  96 */         System.out.println("1");
-/*  97 */         if (UseParameters.HsmConfig.headermessage().equals("No Header")) {
+/*  97 */         if (Constant.HEADER_MESSAGE.equals("No Header")) {
 /*  98 */           output.write(requestData.getBytes());
 /*  99 */           output.flush();
 /*     */         }
-/* 101 */         if (UseParameters.HsmConfig.headermessage().equals("2 byte")) {
+/* 101 */         if (Constant.HEADER_MESSAGE.equals("2 byte")) {
 /* 102 */           System.out.println("2");
 /* 103 */           if (lenghtchar <= 99) {
 /* 104 */             System.out.println("3");
@@ -121,7 +100,7 @@ import com.alodiga.hsm.util.ConstantResponse;
 /* 115 */             output.flush();
 /*     */           }
 /*     */         }
-/* 118 */         if (UseParameters.HsmConfig.headermessage().equals("4 byte char")) {
+/* 118 */         if (Constant.HEADER_MESSAGE.equals("4 byte char")) {
 /* 119 */           System.out.println("5");
 /* 120 */           if (lenghtchar <= 99) {
 /* 121 */             System.out.println("6");
@@ -153,18 +132,18 @@ import com.alodiga.hsm.util.ConstantResponse;
 /*     */           }
 /*     */         }
 /*     */       }
-/* 150 */       if (UseParameters.getTypeHsm().equals("Atalla")) {
+/* 150 */       if (Constant.TYPE_HSM.equals("Atalla")) {
 /* 151 */         System.out.println("10");
 /* 152 */         output.write(String.valueOf(lenghtchar).getBytes());
 /* 153 */         output.write(requestData.getBytes());
 /* 154 */         output.flush();
 /*     */       }
 
-/* 166 */       if (UseParameters.HsmConfig.headermessage().equals("No Header"))
+/* 166 */       if (Constant.HEADER_MESSAGE.equals("No Header"))
 /* 167 */         headermessage = 0;
-/* 168 */       if (UseParameters.HsmConfig.headermessage().equals("2 byte"))
+/* 168 */       if (Constant.HEADER_MESSAGE.equals("2 byte"))
 /* 169 */         headermessage = 2;
-/* 170 */       if (UseParameters.HsmConfig.headermessage().equals("4 byte char")) {
+/* 170 */       if (Constant.HEADER_MESSAGE.equals("4 byte char")) {
 /* 171 */         headermessage = 4;
 /*     */       }
 /*     */       

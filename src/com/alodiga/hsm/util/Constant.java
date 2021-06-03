@@ -21,4 +21,31 @@ public class Constant {
 	public static final String VERIFY_PIN_USING_VISA_METHOD = "07";
 	public static final String VERIFY_PIN_USING_IBM_METHOD = "06";
 	public static final String TRASLATE_PIN_FROM_KWP_TO_MFK = "00";
+	
+	//Valores de los archivos properties
+	public static final String IS_DB = "ON";
+	public static final String TRANSPORT_KEK_CHECK_VALUE = "0";
+	public static final String IP_HSM = "192.168.0.106";
+	public static final String TEST_USE = "YES";
+	public static final String SQL_VERSION= "SQL 2000";
+	public static final String KEY_BLOCK= "0";
+	public static final String TYPE_HSM = "Thales";
+	public static final String HEADER_MESSAGE = "2 byte";
+	public static final String PORT_SERVER="1433";
+	public static final String FIRST_USE="NO";
+	public static final String IP_SERVER="161.100.0.43";
+	public static final String THALES_MSG_HEADER="4";
+	public static final Integer PORT_HSM=9998;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

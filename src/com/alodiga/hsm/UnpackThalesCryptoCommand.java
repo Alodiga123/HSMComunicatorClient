@@ -392,10 +392,10 @@ import com.alodiga.hsm.util.ConstantResponse;
 		String MsgHeader = null;
 		String parameterHeader = null;
 		try {
-			UseParameters.getHeaderThalesMsg();
-			parameterHeader = UseParameters.HeaderThalesMsg.headerthalesmsg();
+			parameterHeader = Constant.THALES_MSG_HEADER;
 			System.out.println("Header red from file " + parameterHeader);
-		} catch (IOException e) {
+		} catch (Exception e) {
+		
 			e.printStackTrace();
 		}
 

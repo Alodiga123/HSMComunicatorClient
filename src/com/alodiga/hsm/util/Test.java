@@ -2,6 +2,7 @@ package com.alodiga.hsm.util;
 
 import com.alodiga.hsm.OmniCryptoCommand;
 import com.alodiga.hsm.exception.NotConnectionHSMException;
+import com.alodiga.hsm.response.GenerateCVVResponse;
 import com.alodiga.hsm.response.GenerateKeyResponse;
 import com.alodiga.hsm.response.GenericResponse;
 import com.alodiga.hsm.response.HSMStatusResponse;
@@ -14,20 +15,59 @@ public class Test {
 	
 		//validateAllProccess();
 		
-		
 //  	a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
-			try {
-				GenerateKeyResponse responseKey = new GenerateKeyResponse();
-				responseKey = OmniCryptoCommand.generateKey("KEK","Single");
-				System.out.println("----------------------------------------------");
-				System.out.println("key: "+responseKey.getKeyValue());
-				System.out.println("header: "+ responseKey.getHeader());
-				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
-				System.out.println("----------------------------------------------");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}		
+//			try {
+//				GenerateKeyResponse responseKey = new GenerateKeyResponse();
+//				responseKey = OmniCryptoCommand.generateKey("KEK","Single");
+//				System.out.println("----------------------------------------------");
+//				System.out.println("key: "+responseKey.getKeyValue());
+//				System.out.println("header: "+ responseKey.getHeader());
+//				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
+//				System.out.println("----------------------------------------------");
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}		
+//		
+			
+			//////////////////////////////////////////////////////////////////
+//			///////////////////////////////////KVC//////////////////////////////
+		    /////////////////////////////////////////////////////////////////////
+			
+//			try {
+//				GenerateKeyResponse responseKey = new GenerateKeyResponse();
+//				System.out.println("----------------------------------------------");
+//				responseKey = HSMOperations.generateDoubleKVC();
+//				System.out.println("----------------------------------------------");
+//				System.out.println("key: "+responseKey.getKeyValue());
+//				System.out.println("header: "+ responseKey.getHeader());
+//				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
+//				System.out.println("----------------------------------------------");
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 		
+		
+		//////////////////////////////////////////////////////////////////
+//		///////////////////////////////////CVV//////////////////////////////
+	    ///////////////////////////////////////////////////////////////////
+//		
+//		try {
+//			GenerateCVVResponse responseKey = new GenerateCVVResponse();
+//			System.out.println("----------------------------------------------");
+//			responseKey = HSMOperations.generateCVV("441A7729A060DC8DE3014AB8264BFA68","54123456789012345","8701","999");
+//			System.out.println("----------------------------------------------");
+//			System.out.println("key: "+responseKey.getKeyValue());
+//			System.out.println("header: "+ responseKey.getHeader());
+//			System.out.println("CVV: "+ responseKey.getCvv());
+//			System.out.println("----------------------------------------------");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}	
+
+			
+			
+			
+			
 		//b) Genera el digito de chequeo 
 		
 	    //   GenerateaKeyCheckValue("7AC4A9CC0FF20A4CD80021B026E34DA0");

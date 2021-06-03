@@ -25,6 +25,8 @@ public class ThalesCryptoCommand {
       Commands[14] = "GC";
       Commands[15] = "NO";
       Commands[16] = "NC";
+      Commands[17] = "CW";
+      
       KeyTypes = new String[50];
       KeyTypes[0] = "000";
       KeyTypes[1] = "001";
@@ -150,6 +152,18 @@ public class ThalesCryptoCommand {
       System.out.println("Comando generate key..............: " + message);
       return message;
    }
+   
+   public static String generateKVC() {
+	      String message = "00003000"+ Commands[4]+"0"+KeyTypes[3] + "Z";
+	      return message;
+    }
+  
+   public static String generateCVV(String cvk,String pan,String endingDate,String serviceCode) { 
+	   String message = "00003000"+Commands[17]+cvk+pan+";"+endingDate+serviceCode;
+	   //String message = "00003000"+Commands[17]+cvk+"54123456789012345"+";"+"8701"+"999";
+	   return message;
+   }
+   
 
    public static String transletePintoMFKZPKtoLMK(String lenghtCryptoKWP,String cryptoKWP,String pinBlock,String lenght,String accountNumber) { 
 	   String Lengtkwp = null;
