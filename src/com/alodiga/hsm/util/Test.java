@@ -258,7 +258,7 @@ public class Test {
 //		System.out.println("pinBlock="+pinBlock);
 		
 		translatePINZPKToLMK(pinBlock, "820008415730", "B563D6ABD6692220","Single");
-		generateIBMPinOffSet("02822", "820008415730", "2", "D");
+		//generateIBMPinOffSet("02822", "820008415730", "2", "D");
     }
     
     
