@@ -8,7 +8,7 @@ public class IBMOfSetResponse extends GeneralResponse {
 		super();
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
-		this.IBMoffset = name;
+		this.IBMoffset = name.substring(4,8);
 	}
 
 	public String getIBMoffset() {

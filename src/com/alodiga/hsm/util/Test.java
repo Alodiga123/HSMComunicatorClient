@@ -15,20 +15,19 @@ public class Test {
 	
 		//validateAllProccess();
 		
-//  	a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
-//			try {
-//				GenerateKeyResponse responseKey = new GenerateKeyResponse();
-//				responseKey = OmniCryptoCommand.generateKey("KEK","Single");
-//				System.out.println("----------------------------------------------");
-//				System.out.println("key: "+responseKey.getKeyValue());
-//				System.out.println("header: "+ responseKey.getHeader());
-//				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
-//				System.out.println("----------------------------------------------");
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}		
-//		
-			
+  	//a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
+			try {
+				GenerateKeyResponse responseKey = new GenerateKeyResponse();
+				responseKey = OmniCryptoCommand.generateKey("KWP","Single");
+				System.out.println("----------------------------------------------");
+				System.out.println("key: "+responseKey.getKeyValue());
+				System.out.println("header: "+ responseKey.getHeader());
+				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
+				System.out.println("----------------------------------------------");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+
 			//////////////////////////////////////////////////////////////////
 //			///////////////////////////////////KVC//////////////////////////////
 		    /////////////////////////////////////////////////////////////////////
@@ -45,16 +44,17 @@ public class Test {
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}
+			
 		
 		
 		//////////////////////////////////////////////////////////////////
 //		///////////////////////////////////CVV//////////////////////////////
 	    ///////////////////////////////////////////////////////////////////
-//		
+		
 //		try {
 //			GenerateCVVResponse responseKey = new GenerateCVVResponse();
 //			System.out.println("----------------------------------------------");
-//			responseKey = HSMOperations.generateCVV("441A7729A060DC8DE3014AB8264BFA68","54123456789012345","8701","999");
+//			responseKey = HSMOperations.generateCVV("EC338F63A9ADFCF8B484745B4199DE10","54123456789012347","8701","201");
 //			System.out.println("----------------------------------------------");
 //			System.out.println("key: "+responseKey.getKeyValue());
 //			System.out.println("header: "+ responseKey.getHeader());
@@ -63,26 +63,23 @@ public class Test {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}	
-
-			
-			
-			
-			
 		//b) Genera el digito de chequeo 
-		
-	    //   GenerateaKeyCheckValue("7AC4A9CC0FF20A4CD80021B026E34DA0");
+        //GenerateaKeyCheckValue("ECAB0BBF46CA06AF661B2D486290E7BF");
 		//c) 
-		//exportKey("6B0C5E55B70BAA394489D3C678724F9A", "DCC1EBB15A5B7DD9");
+//		exportKey("913849889255C605", "50E24F36ADE5E958");
 //		 try {
-//			//OmniCryptoCommand.exportKey("42BBE7D9A0A55D0EAA54C982B4D06B70", "7D13B6029A92A7AE");
+////			OmniCryptoCommand.exportKey("ECAB0BBF46CA06AF661B2D486290E7BF", "D1930F74F2CD7880");
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		//d) translatePINZPKToLMK 
-	     //translatePINZPKToLMK("51186C4A44DAEB7A", "820008415730", "DB683B680E72FC4A","Single");
+	    // TODO Auto-generated catch block
+        //			e.printStackTrace();
+        //		}
+        // d) translatePINZPKToLMK 
+		// String responsePinELMK;
+	    // responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
+		// System.out.println("responsePinELMK="+responsePinELMK);
 		//e) generateIBMPinOffSet	
-		//generateIBMPinOffSet("02821", "820008415730", "2", "D");
+        IBMOfSetResponse ibmOfSetResponse =  generateIBMPinOffSet("04321", "820008415730");
+		System.out.println("ibmOfSetResponse="+ibmOfSetResponse.getIBMoffset());
 	}
 	
 	
@@ -125,9 +122,7 @@ public class Test {
 
     private static  IBMOfSetResponse generateIBMPinOffSet(
     		String pinELMK,
-    		String pan,
-    		String institutionId,
-    		String typeOffProduct){
+    		String pan){
 		StringBuilder requestHSM = new StringBuilder();
 		String offSetResponse;
 		try {
@@ -135,9 +130,6 @@ public class Test {
 			requestHSM.append(",");
 			requestHSM.append(pan);
 			requestHSM.append(",");
-			requestHSM.append(institutionId);
-			requestHSM.append(",");
-			requestHSM.append(typeOffProduct);
 			//TODO:Comentar a Alvaro que falta una base de datos
 			 offSetResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.GENERATE_IBM_PIN_OFF_SET), requestHSM.toString()); 			
 		} catch (NumberFormatException e) {
@@ -147,11 +139,12 @@ public class Test {
 			e.printStackTrace();
 			return new IBMOfSetResponse(ConstantResponse.ERROR_RESPONSE_CODE,ConstantResponse.ERROR_RESPONSE_MESSAGE,null);
 		}
-        return new IBMOfSetResponse(ConstantResponse.SUCESSFULL_RESPONSE_CODE,ConstantResponse.SUCESSFULL_RESPONSE_MESSAGE,"0570");
+        return new IBMOfSetResponse(ConstantResponse.SUCESSFULL_RESPONSE_CODE,ConstantResponse.SUCESSFULL_RESPONSE_MESSAGE,offSetResponse);
     }
     
-    private static void  translatePINZPKToLMK(String pinBlock, String pan,String kwp,String Longer){
+    private static String translatePINZPKToLMK(String pinBlock, String pan,String kwp,String Longer){
 		StringBuilder requestHSM = new StringBuilder();
+		String traslateResponse = "";
 		requestHSM.append(pinBlock);
 		requestHSM.append(",");
 		requestHSM.append(pan);
@@ -160,13 +153,13 @@ public class Test {
 		requestHSM.append(",");
 		requestHSM.append(Longer);
 		try {
-			String traslateResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.TRASLATE_PIN_FROM_KWP_TO_MFK), requestHSM.toString());
-			System.out.println(traslateResponse);
+			 traslateResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.TRASLATE_PIN_FROM_KWP_TO_MFK), requestHSM.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();	
 		}
+		return traslateResponse.substring(4,9);
         
     }
     

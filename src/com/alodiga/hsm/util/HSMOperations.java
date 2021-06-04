@@ -49,17 +49,17 @@ public class HSMOperations {
      *@param EndingDate:Fecha de vencimiento de la tarjeta en Formato YYMM
      *@param ServicesCode
      *@return retorna el cvv  de la tarjeta dependiendo del service code o el cvv que se va a validar
-     *  //ICVV EMVchip 999, CVV2 Pintado Atras 000, CVV1 201 Banda de la tarjeta  Field 22
+     *  //ICVV EMVchip 999, CVV2 Pintado Atras 000, CVV1 201 Banda de la tarjeta  Field 22 , 35
 
 		SubField1 
 
 		PAN entry mode (positions 1 - 2)
 		00 – Unknown
-		01 – Manual (i.e keypad)
-		02 – Magnetic Stripe (possibly constructed manually, CVV may be checked)
-		03 – Barcode
-		04 – OCR
-		05 – ICC (CVV may be checked)
+		01 – Manual (i.e keypad)===> 000
+		02 – Magnetic Stripe (possibly constructed manually, CVV may be checked) ====> 201
+		03 – Barcode ====> 000
+		04 – OCR ====>
+		05 – ICC (CVV may be checked) ==> 999
 		07 – Auto - entry via contactless ICC
 		90 – Magnetic strip as read from track 2
 		91 – Auto - entry via contactless magnetic stripe
@@ -75,8 +75,6 @@ public class HSMOperations {
     	responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
     	return new GenerateCVVResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage, "Single");		  
     }
-    
-    
     
     /**
      *@author kerwin Gomez
