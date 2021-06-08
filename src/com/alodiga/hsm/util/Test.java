@@ -74,8 +74,8 @@ public class Test {
         //			e.printStackTrace();
         //		}
         // d) translatePINZPKToLMK 
-		// String responsePinELMK;
-	    // responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
+             String responsePinELMK;
+	     responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
 		// System.out.println("responsePinELMK="+responsePinELMK);
 		//e) generateIBMPinOffSet	
         IBMOfSetResponse ibmOfSetResponse =  generateIBMPinOffSet("04321", "820008415730");
