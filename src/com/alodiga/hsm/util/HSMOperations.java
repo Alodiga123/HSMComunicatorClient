@@ -31,6 +31,26 @@ public class HSMOperations {
     private static final byte[][] s = new byte[][]{{14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7, 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8, 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0, 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13}, {15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10, 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5, 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9}, {10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8, 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1, 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7, 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12}, {7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15, 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9, 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4, 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14}, {2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9, 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6, 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14, 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3}, {12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11, 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8, 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6, 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13}, {4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1, 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6, 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2, 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12}, {13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7, 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2, 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8, 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}};
     private static final byte[] rots = new byte[]{1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
     
+    public static String getPinblock(String kwpclear, String pin, String pan) {
+        Block block = new Block(kwpclear);
+        String s6 = "04" + pin + Convert.resize("", 8, 'F', false) + "FF";
+        String s7 = null;
+        s7 = "0000" + pan.substring(pan.length() - 13, pan.length() - 1);
+        String s8 = "";
+        System.out.println("valor de S7:" + s7);
+        byte abyte0[] = Convert.fromHexDataToBinData(s6.getBytes());
+        byte abyte1[] = Convert.fromHexDataToBinData(s7.getBytes());
+        byte abyte2[] = new byte[8];
+        for (int i = 0; i < 8; i++)
+        abyte2[i] = (byte) (abyte0[i] ^ abyte1[i]);
+        s8 = new String(Convert.fromBinDataToHexData(abyte2));
+        System.out.println("Valor de S8=" + s8);
+        Block block1 = new Block(s8);
+        Block block2 = Utils.desEncrypt(block1, block);
+        String s9 = block2.toString();
+        return s9;
+    }
+    
     public static GenerateKeyResponse generateKey(String keyType, String lenght) throws Exception {
 	if ((keyType.equals("KEK")) || (keyType.equals("TPK")) || (keyType.equals("KWP"))|| (keyType.equals("PVK")) || (keyType.equals("CAK")) || (keyType.equals("CVK"))) {
             String requestMessage = "";
@@ -134,18 +154,18 @@ public class HSMOperations {
         System.out.println("resultValidatePin "+ resultValidatePin);
     }
     
-    private static String translatePINZPKToLMK(String pinBlock, String pan,String kwp,String Longer){
+    public static String translatePINZPKToLMK(String pinBlock, String pan,String kwp,String Longer){
         StringBuilder requestHSM = new StringBuilder();
         String traslateResponse = "";
-        requestHSM.append(pinBlock);
+        requestHSM.append(pinBlock.trim());
         requestHSM.append(",");
-        requestHSM.append(pan);
+        requestHSM.append(pan.trim());
         requestHSM.append(",");
-        requestHSM.append(kwp);
+        requestHSM.append(kwp.trim());
         requestHSM.append(",");
-        requestHSM.append(Longer);
+        requestHSM.append(Longer.trim());
         try {
-                 traslateResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.TRASLATE_PIN_FROM_KWP_TO_MFK), requestHSM.toString());
+                 traslateResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.TRASLATE_PIN_FROM_KWP_TO_MFK), requestHSM.toString().trim());
         } catch (NumberFormatException e) {
                 e.printStackTrace();
         } catch (Exception e) {
@@ -172,31 +192,26 @@ public class HSMOperations {
         return new HSMStatusResponse(ConstantResponse.SUCESSFULL_RESPONSE_CODE,ConstantResponse.SUCESSFULL_RESPONSE_MESSAGE,hsmStatusResponse.toString().trim());
     }    
 
-    private static  IBMOfSetResponse generateIBMPinOffSet(
+    public static  IBMOfSetResponse generateIBMPinOffSet(
         String pinELMK,
-        String pan,
-        String institutionId,
-        String typeOffProduct){
+        String pan){
         StringBuilder requestHSM = new StringBuilder();
         String offSetResponse;
         try {
-            requestHSM.append(pinELMK);
-            requestHSM.append(",");
-            requestHSM.append(pan);
-            requestHSM.append(",");
-            requestHSM.append(institutionId);
-            requestHSM.append(",");
-            requestHSM.append(typeOffProduct);
-            //TODO:Comentar a Alvaro que falta una base de datos
-             offSetResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.GENERATE_IBM_PIN_OFF_SET), requestHSM.toString()); 			
+                requestHSM.append(pinELMK);
+                requestHSM.append(",");
+                requestHSM.append(pan);
+                requestHSM.append(",");
+                //TODO:Comentar a Alvaro que falta una base de datos
+                 offSetResponse  = OmniCryptoCommand.ProcessRequest(Integer.parseInt(Constant.GENERATE_IBM_PIN_OFF_SET), requestHSM.toString()); 			
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return new IBMOfSetResponse(ConstantResponse.FORMAT_ERROR_RESPONSE_CODE,ConstantResponse.FORMAT_ERROR_RESPONSE_MESSAGE,null);	
+                e.printStackTrace();
+                return new IBMOfSetResponse(ConstantResponse.FORMAT_ERROR_RESPONSE_CODE,ConstantResponse.FORMAT_ERROR_RESPONSE_MESSAGE,null);	
         } catch (Exception e) {
-            e.printStackTrace();
-            return new IBMOfSetResponse(ConstantResponse.ERROR_RESPONSE_CODE,ConstantResponse.ERROR_RESPONSE_MESSAGE,null);
+                e.printStackTrace();
+                return new IBMOfSetResponse(ConstantResponse.ERROR_RESPONSE_CODE,ConstantResponse.ERROR_RESPONSE_MESSAGE,null);
         }
-        return new IBMOfSetResponse(ConstantResponse.SUCESSFULL_RESPONSE_CODE,ConstantResponse.SUCESSFULL_RESPONSE_MESSAGE,"0570");
+        return new IBMOfSetResponse(ConstantResponse.SUCESSFULL_RESPONSE_CODE,ConstantResponse.SUCESSFULL_RESPONSE_MESSAGE,offSetResponse);
     }
     
     private static GenericResponse getHsmFinware(){
@@ -385,27 +400,6 @@ public class HSMOperations {
       }
 
       return var2;
-    }
-
-
-    public static String getPinblock(String kwpclear, String pin, String pan) {
-        Block block = new Block(kwpclear);
-        String s6 = "04" + pin + Convert.resize("", 8, 'F', false) + "FF";
-        String s7 = null;
-        s7 = "0000" + pan.substring(pan.length() - 13, pan.length() - 1);
-        String s8 = "";
-        System.out.println("valor de S7:" + s7);
-        byte abyte0[] = Convert.fromHexDataToBinData(s6.getBytes());
-        byte abyte1[] = Convert.fromHexDataToBinData(s7.getBytes());
-        byte abyte2[] = new byte[8];
-        for (int i = 0; i < 8; i++)
-        abyte2[i] = (byte) (abyte0[i] ^ abyte1[i]);
-        s8 = new String(Convert.fromBinDataToHexData(abyte2));
-        System.out.println("Valor de S8=" + s8);
-        Block block1 = new Block(s8);
-        Block block2 = Utils.desEncrypt(block1, block);
-        String s9 = block2.toString();
-        return s9;
     }
     
 }
