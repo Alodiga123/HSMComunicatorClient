@@ -30,3 +30,5 @@ nbproject/project.xml
 parameters.properties
 
 src/com/alodiga/hsm/util/Test.java
+
+*.class
