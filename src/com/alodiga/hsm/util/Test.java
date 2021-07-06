@@ -115,9 +115,8 @@ public class Test {
 		String pan = "501878200084157306";
 
 		/////////////////////////////////////////////////////////////////////////
-		//schemeID
+		//schemeID 0 Visa 1 MasterCard
 		String schemeID = ConstantTlv.MASTER_VALUE_SCHEMEID;
-		
 		try {
 			ARQCEmvDataResponse responseKey = new ARQCEmvDataResponse();
 			System.out.println("----------------------------------------------");
