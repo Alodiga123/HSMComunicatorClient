@@ -1,5 +1,15 @@
 /*     */ package com.alodiga.hsm;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.alodiga.hsm.data.object.DataEMVField;
+import com.alodiga.hsm.exception.EMVEmptydataException;
+import com.alodiga.hsm.exception.ErrorEMVdataException;
+import com.alodiga.hsm.util.ConstantTlv;
+import com.alodiga.hsm.util.Tlv;
+import com.alodiga.hsm.util.TlvUtils;
+
 public class ThalesCryptoCommand {
    private static final String[] Commands = new String[50];
    private static final String MsgHeader = "00003000";
@@ -164,6 +174,119 @@ public class ThalesCryptoCommand {
 	   return message;
    }
    
+   
+
+   /**
+    *@author kerwin Gomez
+    *@param key: Key generado previamente
+    *@param pan:Numero de Tarjeta de 16 a 19 digitos
+    *@param field55:  Campo 55 on el campo deonde venga la data del chip.
+    *@param schemeID: Campo que sirve para indicar el método de validación y generación de ARPC
+    *   0 = Visa VSDC or UKIS
+		1 = Europay or MasterCard M/Chip 
+    * 
+    * 
+    *@return 
+    *    
+    */
+   public static String validateARPCAndGenerationARPC(DataEMVField dataEmv,String key, String pan, String schemeID) throws ErrorEMVdataException { 
+		try {
+			validateEmtyObject(dataEmv);	
+		} catch (EMVEmptydataException e) {
+			throw new ErrorEMVdataException(e.getMessage(), e);
+		}
+		String message = ConstantTlv.HSM_HEADER + Commands[9] + ConstantTlv.MODE + schemeID + key + formatedPan(pan, dataEmv.getPanSerialNumber())
+				+ dataEmv.getAplicationTransactionCounter() + dataEmv.getUnpredictableNumber() + Integer.toHexString(dataEmv.getTransactionDataLenght()) + dataEmv.getTransactionData() + ConstantTlv.HSM_DELIMITER_COMAND
+				+ dataEmv.getCryptogramAplicationData() + ConstantTlv.ARC_TEMPORAL_CONSTANT;
+		System.out.println("message:" + message);
+		return message;
+	}
+
+	// psn pan secuentNumber
+	public static String formatedPan(String pan, String psn) {
+		return pan.substring(pan.length() - 14, pan.length()) + psn;
+	}
+
+	public static void validateEmtyObject(DataEMVField dataEMV) throws EMVEmptydataException {
+		try {
+			dataEMV.getPanSerialNumber();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.PSN , e);
+		}
+		
+		try {
+			dataEMV.getAplicationTransactionCounter();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.APLICATION_TRANSACTION_COUNTER , e);
+		}
+		
+		try {
+			dataEMV.getUnpredictableNumber();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.UNPREDICTABLE_NUMBER , e);
+		}
+		
+		try {
+			dataEMV.getApplicationCryptogram();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.APPLICATION_CRYPTOGRAM , e);
+		}
+
+		try {
+			dataEMV.getAmount();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.AMOUNT_AUTORISED , e);
+		}
+		
+		try {
+			dataEMV.getOtherAmount();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.OTHER_AMOUNT , e);
+		}
+		
+		try {
+			dataEMV.getTerminalVerificationResult();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.TERMINAL_VERIFICATION_RESULT , e);
+		}
+		
+		try {
+			dataEMV.getTerminalCountryCode();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage+ConstantTlv.TERMINAL_COUNTRY_CODE , e);
+		}
+		
+		try {
+			 dataEMV.getTransactionCurrencyCode();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.TRANSACTION_CURRENCY_CODE , e);
+		}
+		
+		try {
+			dataEMV.getTransactionDate();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.TRANSACTION_DATE , e);
+		}
+		
+		try {
+			dataEMV.getTransactionType();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.TRANSACTION_TYPE , e);
+		}
+		
+		try {
+			dataEMV.getAplicationInterchangeProfile();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.APLICATION_INTERCHANGE_PROFILE , e);
+		}
+		
+		try {
+			dataEMV.getIsuuerAplicationDate();
+		} catch (NullPointerException e) {
+			throw new EMVEmptydataException(ConstantTlv.fieldEmptyMessage + ConstantTlv.ISSUER_APLICATION_DATA , e);
+		}
+		
+	}
 
    public static String transletePintoMFKZPKtoLMK(String lenghtCryptoKWP,String cryptoKWP,String pinBlock,String lenght,String accountNumber) { 
 	   String Lengtkwp = null;

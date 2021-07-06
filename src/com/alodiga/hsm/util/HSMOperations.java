@@ -4,11 +4,16 @@
  * and open the template in the editor.
  */
 package com.alodiga.hsm.util;
+import java.security.SecureRandom;
+
 import com.alodiga.hsm.CryptoConnection;
 import com.alodiga.hsm.OmniCryptoCommand;
 import com.alodiga.hsm.ThalesCryptoCommand;
 import com.alodiga.hsm.UnpackThalesCryptoCommand;
+import com.alodiga.hsm.data.object.DataEMVField;
+import com.alodiga.hsm.exception.ErrorEMVdataException;
 import com.alodiga.hsm.exception.NotConnectionHSMException;
+import com.alodiga.hsm.response.ARQCEmvDataResponse;
 import com.alodiga.hsm.response.GenerateCVVResponse;
 import com.alodiga.hsm.response.GenerateKeyResponse;
 import com.alodiga.hsm.response.GenericResponse;
@@ -97,7 +102,6 @@ public class HSMOperations {
 		This Value intro field 35
      *    
      */
-    
     public static GenerateCVVResponse generateCVV(String cvk,String pan,String endingDate,String serviceCode) throws Exception {
     	String requestMessage = "";
     	String responseMessage = "";
@@ -106,6 +110,42 @@ public class HSMOperations {
     	return new GenerateCVVResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage, "Single");		  
     }
     
+    public static ARQCEmvDataResponse ARQCVerificationAndgenerationARPC(DataEMVField dataEmv,String key, String pan, String schemeID) throws Exception, ErrorEMVdataException {
+    	String requestMessage = "";
+    	String responseMessage = "";
+    	try {
+    		String hsmMessage = ThalesCryptoCommand.validateARPCAndGenerationARPC( dataEmv, key,  pan,  schemeID);
+    		//////////////////////////////////////////////////////////////////////////////
+    		// Cable contra la caja genera numero Ramdon y setea en el OBJECTO   /////////
+        	//////////////////////////////////////////////////////////////////////////////
+    		//requestMessage = CryptoConnection.sendAndReceiveToHSM(hsmMessage);
+        	//responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
+    		dataEmv.setApplicationCryptogram(getRamdomARPCValue());
+    		/*
+    		 * 00 : No error 01 : ARQC/TC/AAC verification failed 04 : Mode Flag not 0, 1 or
+    		 * 2 05 : Unrecognised Scheme ID 10 : MK parity error 12 : No keys in user
+    		 * storage 13 : LMK parity error 15 : Error in input data 21 : Invalid user
+    		 * storage index 80 : Data length error 81: Invalid certificate header
+    		 */
+		} catch (ErrorEMVdataException e) {
+			throw new ErrorEMVdataException(e.getMessage(),e);
+		}
+	
+    	return new ARQCEmvDataResponse(Constant.SUCCESS,Constant.SUCCESS, dataEmv);		  
+    }
+    
+	public static String getRamdomValue() throws Exception {
+		SecureRandom random = new SecureRandom();
+		int num = random.nextInt(0x1000000);
+		String formatted = String.format("%06x", num);
+		return formatted;
+	}
+	
+	public static String getRamdomARPCValue() throws Exception {	
+		return ((getRamdomValue() + getRamdomValue() + getRamdomValue()).substring(0,16));
+	}
+	
+
     /**
      *@author kerwin Gomez
      *@return retorna una llave conpuesta por la concatenación de 2 llaves CVK simples 

@@ -33,9 +33,13 @@ public class Constant {
 	public static final String HEADER_MESSAGE = "2 byte";
 	public static final String PORT_SERVER="1433";
 	public static final String FIRST_USE="NO";
-	public static final String IP_SERVER="161.100.0.43";
+	public static final String IP_SERVER="10.11.5.81";
 	public static final String THALES_MSG_HEADER="4";
 	public static final Integer PORT_HSM=9998;
+	
+	
+	//Valores de los archivos properties
+	public static final String PSN = "5F34";
 	
 	
 	

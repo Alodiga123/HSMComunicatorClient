@@ -1,7 +1,9 @@
 package com.alodiga.hsm.util;
 
 import com.alodiga.hsm.OmniCryptoCommand;
+import com.alodiga.hsm.data.object.DataEMVField;
 import com.alodiga.hsm.exception.NotConnectionHSMException;
+import com.alodiga.hsm.response.ARQCEmvDataResponse;
 import com.alodiga.hsm.response.GenerateCVVResponse;
 import com.alodiga.hsm.response.GenerateKeyResponse;
 import com.alodiga.hsm.response.GenericResponse;
@@ -10,28 +12,47 @@ import com.alodiga.hsm.response.IBMOfSetResponse;
 
 
 public class Test {
+	
+	
+	
+	public static String parsePan(String pan) {
+		return pan.substring(pan.length() - 13, pan.length() - 1);
+	}
+	
+	
+
+	
+	
 
 	public static void main(String[] args) {
+//		String response = formatedPan("501878200084157306","12"); 
+//		System.out.println(response);
+
+		
+		
+		
+//		System.out.println(parsePan("501878200084157306"));
+		
 	
 		//validateAllProccess();
 		
-  	//a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
-			try {
-				GenerateKeyResponse responseKey = new GenerateKeyResponse();
-				responseKey = OmniCryptoCommand.generateKey("KWP","Single");
-				System.out.println("----------------------------------------------");
-				System.out.println("key: "+responseKey.getKeyValue());
-				System.out.println("header: "+ responseKey.getHeader());
-				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
-				System.out.println("----------------------------------------------");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}		
+ // 	a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
+//			try {
+//				GenerateKeyResponse responseKey = new GenerateKeyResponse();
+//				responseKey = OmniCryptoCommand.generateKey("CAK","Double");
+//				System.out.println("----------------------------------------------");
+//				System.out.println("key: "+responseKey.getKeyValue());
+//				System.out.println("header: "+ responseKey.getHeader());
+//				System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
+//				System.out.println("----------------------------------------------");
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}		
 
 			//////////////////////////////////////////////////////////////////
 //			///////////////////////////////////KVC//////////////////////////////
 		    /////////////////////////////////////////////////////////////////////
-			
+//			
 //			try {
 //				GenerateKeyResponse responseKey = new GenerateKeyResponse();
 //				System.out.println("----------------------------------------------");
@@ -43,18 +64,17 @@ public class Test {
 //				System.out.println("----------------------------------------------");
 //			} catch (Exception e) {
 //				e.printStackTrace();
-//			}
-			
-		
+//  		}
+//			
+//		
 		
 		//////////////////////////////////////////////////////////////////
 //		///////////////////////////////////CVV//////////////////////////////
 	    ///////////////////////////////////////////////////////////////////
-		
 //		try {
 //			GenerateCVVResponse responseKey = new GenerateCVVResponse();
 //			System.out.println("----------------------------------------------");
-//			responseKey = HSMOperations.generateCVV("EC338F63A9ADFCF8B484745B4199DE10","54123456789012347","8701","201");
+//			responseKey = HSMOperations.generateCVV("009443AB394F696DF3D193271375D491","501878200084157306","1202","201");
 //			System.out.println("----------------------------------------------");
 //			System.out.println("key: "+responseKey.getKeyValue());
 //			System.out.println("header: "+ responseKey.getHeader());
@@ -63,6 +83,53 @@ public class Test {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}	
+		
+		////////////////////////////////////////////////////////////////
+		///////////////////////////////////ARQC -ARPC//////////////////////////////
+	    /////////////////////////////////////////////////////////////////
+		//Objeto  EMV DATA CHIP
+		DataEMVField emvData = new DataEMVField();
+		emvData.setAmount("000000001000");
+		emvData.setOtherAmount("000000000000");
+		emvData.setTerminalCountryCode("0862");
+		emvData.setTerminalVerificationResult("4000048000");
+		emvData.setTransactionCurrencyCode("0862");
+		emvData.setTransactionDate("180511");
+		emvData.setTransactionType("22");
+		emvData.setUnpredictableNumber("7DEDDD6E");
+		emvData.setAplicationInterchangeProfile("5800");
+		emvData.setAplicationTransactionCounter("049E");
+		emvData.setIsuuerAplicationDate("0110A00003220000000000000000000000FF");
+		emvData.setPanSerialNumber("12");
+		emvData.setCryptogramAplicationData("4746E2ED8B7166C9");
+		emvData.setTerminalType("22");
+		emvData.setInterfaceDeviceSerialNumber("05773805");
+		emvData.setCardHolderVerificationMethod("020300");
+		emvData.setTerminalCapabilities("terminalCapabilities");
+		////////////////////////////////////////////////////////////////////////
+		//llave
+		String key = "009443AB394F696DF3D193271375D491";
+		
+		/////////////////////////////////////////////////////////////////////////
+		// Tarjeta
+		String pan = "501878200084157306";
+
+		/////////////////////////////////////////////////////////////////////////
+		//schemeID
+		String schemeID = ConstantTlv.MASTER_VALUE_SCHEMEID;
+		
+		try {
+			ARQCEmvDataResponse responseKey = new ARQCEmvDataResponse();
+			System.out.println("----------------------------------------------");
+			responseKey = HSMOperations.ARQCVerificationAndgenerationARPC(emvData,key,pan,schemeID);
+			System.out.println("----------------------------------------------");
+			System.out.println("responseCode: "+ responseKey.getResponseCode());
+			System.out.println("objectRersponse: "+ responseKey.getDataemvField().toString());
+			System.out.println("----------------------------------------------");
+		} catch (Exception e) {	
+			e.printStackTrace();
+		}
+		
 		//b) Genera el digito de chequeo 
         //GenerateaKeyCheckValue("ECAB0BBF46CA06AF661B2D486290E7BF");
 		//c) 
@@ -74,12 +141,12 @@ public class Test {
         //			e.printStackTrace();
         //		}
         // d) translatePINZPKToLMK 
-             String responsePinELMK;
-	     responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
+//	     String responsePinELMK;
+//	     responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
 		// System.out.println("responsePinELMK="+responsePinELMK);
 		//e) generateIBMPinOffSet	
-        IBMOfSetResponse ibmOfSetResponse =  generateIBMPinOffSet("04321", "820008415730");
-		System.out.println("ibmOfSetResponse="+ibmOfSetResponse.getIBMoffset());
+        //IBMOfSetResponse ibmOfSetResponse =  generateIBMPinOffSet("04321", "820008415730");
+		//System.out.println("ibmOfSetResponse="+ibmOfSetResponse.getIBMoffset());
 	}
 	
 	
@@ -253,11 +320,11 @@ public class Test {
 //		//////////////////////////////////////////////////////////////////////////////////
 //		
 		
-		String pinBlock = Utils.getPinblock("E5614FF24C765137", "2822", "501878200084157306");
+		//String pinBlock = Utils.getPinblock("E5614FF24C765137", "2822", "501878200084157306");
 		
 //		System.out.println("pinBlock="+pinBlock);
 		
-		translatePINZPKToLMK(pinBlock, "820008415730", "B563D6ABD6692220","Single");
+		//translatePINZPKToLMK(pinBlock, "820008415730", "B563D6ABD6692220","Single");
 		//generateIBMPinOffSet("02822", "820008415730", "2", "D");
     }
     
