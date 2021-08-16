@@ -443,6 +443,33 @@ responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
 return new GenerateKeyResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage,"Single");		  
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////generateBDK/////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+public static GenerateKeyResponse generateBDK(String lenght) throws Exception {
+		String requestMessage = "";
+		String responseMessage = "";
+		 requestMessage = CryptoConnection
+				.sendAndReceiveToHSM(ThalesCryptoCommand.generateBDK(lenght));
+		  responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
+		  return new GenerateKeyResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage,lenght,null);  
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////GenerateValidationValueVisa/////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+public static GenerateKeyResponse generateVisaPVV(String pan, String pinUnderLMK, String PVK) throws Exception {
+
+	String panFormated = (pan.substring(pan.length() - 13, pan.length() - 1));
+
+	String requestMessage = "";
+	String responseMessage = "";
+	requestMessage = CryptoConnection.sendAndReceiveToHSM(ThalesCryptoCommand.generatePVV(panFormated,pinUnderLMK,PVK));
+	responseMessage = UnpackThalesCryptoCommand.unpackGenerateKey(requestMessage);
+	return new GenerateKeyResponse(Constant.SUCCESS, Constant.SUCCESS, responseMessage, "Double", null);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

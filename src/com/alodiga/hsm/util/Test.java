@@ -36,7 +36,7 @@ public class Test {
 	
 		//validateAllProccess();
 		
- // 	a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
+  	//a) llaves que adminite este método (KEK,KWP,PVK,CAK,CVK,CAK)
 //			try {
 //				GenerateKeyResponse responseKey = new GenerateKeyResponse();
 //				responseKey = OmniCryptoCommand.generateKey("CAK","Double");
@@ -65,8 +65,50 @@ public class Test {
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //  		}
-//			
-//		
+		//////////////////////////////////////////////////////////////////
+//		///////////////////////////////////BDK//////////////////////////////
+	    /////////////////////////////////////////////////////////////////////
+// try {
+//		GenerateKeyResponse responseKey = new GenerateKeyResponse();
+//		responseKey = OmniCryptoCommand.generateBDK("Double");
+//		System.out.println("----------------------------------------------");
+//		System.out.println("key: "+responseKey.getKeyValue());
+//		System.out.println("header: "+ responseKey.getHeader());
+//		System.out.println("virificationDigit: "+ responseKey.getVerificationDigit());
+//		System.out.println("----------------------------------------------");
+//	} catch (Exception e) {
+//		e.printStackTrace();
+//	}		
+ 
+//Campos
+	//	campo 63 48
+		
+ try {
+		GenerateKeyResponse responseKey = new GenerateKeyResponse();
+		responseKey = OmniCryptoCommand.generateVisaPVV("501878200084157306", "05432", "E741620A9C289D6241882E8028BCD4B4" );
+		System.out.println("----------------------------------------------");
+		System.out.println("pvv: "+responseKey.getKeyValue());
+		System.out.println("header: "+ responseKey.getHeader());
+		System.out.println("virificationDigitsss: "+ responseKey.getVerificationDigit());
+		System.out.println("----------------------------------------------");
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+		
+		
+		
+		
+		
+		
+		
+// 
+//		String pan= "501878200084157306";
+//        String s7 = "0000" + pan.substring(pan.length() - 13, pan.length() - 1);
+//        String s8 = "";
+//        System.out.println("valor de S7:" + s7);	
+ 
+		
+
 		
 		//////////////////////////////////////////////////////////////////
 //		///////////////////////////////////CVV//////////////////////////////
@@ -88,47 +130,47 @@ public class Test {
 		///////////////////////////////////ARQC -ARPC//////////////////////////////
 	    /////////////////////////////////////////////////////////////////
 		//Objeto  EMV DATA CHIP
-		DataEMVField emvData = new DataEMVField();
-		emvData.setAmount("000000001000");
-		emvData.setOtherAmount("000000000000");
-		emvData.setTerminalCountryCode("0862");
-		emvData.setTerminalVerificationResult("4000048000");
-		emvData.setTransactionCurrencyCode("0862");
-		emvData.setTransactionDate("180511");
-		emvData.setTransactionType("22");
-		emvData.setUnpredictableNumber("7DEDDD6E");
-		emvData.setAplicationInterchangeProfile("5800");
-		emvData.setAplicationTransactionCounter("049E");
-		emvData.setIsuuerAplicationDate("0110A00003220000000000000000000000FF");
-		emvData.setPanSerialNumber("12");
-		emvData.setCryptogramAplicationData("4746E2ED8B7166C9");
-		emvData.setTerminalType("22");
-		emvData.setInterfaceDeviceSerialNumber("05773805");
-		emvData.setCardHolderVerificationMethod("020300");
-		emvData.setTerminalCapabilities("terminalCapabilities");
+//		DataEMVField emvData = new DataEMVField();
+//		emvData.setAmount("000000001000");
+//		emvData.setOtherAmount("000000000000");
+//		emvData.setTerminalCountryCode("0862");
+//		emvData.setTerminalVerificationResult("4000048000");
+//		emvData.setTransactionCurrencyCode("0862");
+//		emvData.setTransactionDate("180511");
+//		emvData.setTransactionType("22");
+//		emvData.setUnpredictableNumber("7DEDDD6E");
+//		emvData.setAplicationInterchangeProfile("5800");
+//		emvData.setAplicationTransactionCounter("049E");
+//		emvData.setIsuuerAplicationDate("0110A00003220000000000000000000000FF");
+//		emvData.setPanSerialNumber("12");
+//		emvData.setCryptogramAplicationData("4746E2ED8B7166C9");
+//		emvData.setTerminalType("22");
+//		emvData.setInterfaceDeviceSerialNumber("05773805");
+//		emvData.setCardHolderVerificationMethod("020300");
+//		emvData.setTerminalCapabilities("terminalCapabilities");
 		////////////////////////////////////////////////////////////////////////
-		//llave
-		String key = "009443AB394F696DF3D193271375D491";
-		
-		/////////////////////////////////////////////////////////////////////////
-		// Tarjeta
-		String pan = "501878200084157306";
-
-		/////////////////////////////////////////////////////////////////////////
-		//schemeID 0 Visa 1 MasterCard
-		String schemeID = ConstantTlv.MASTER_VALUE_SCHEMEID;
-		try {
-			ARQCEmvDataResponse responseKey = new ARQCEmvDataResponse();
-			System.out.println("----------------------------------------------");
-			responseKey = HSMOperations.ARQCVerificationAndgenerationARPC(emvData,key,pan,schemeID);
-			System.out.println("----------------------------------------------");
-			System.out.println("responseCode: "+ responseKey.getResponseCode());
-			System.out.println("objectRersponse: "+ responseKey.getDataemvField().toString());
-			System.out.println("----------------------------------------------");
-		} catch (Exception e) {	
-			e.printStackTrace();
-		}
-		
+//		//llave
+//		String key = "009443AB394F696DF3D193271375D491";
+//		
+//		/////////////////////////////////////////////////////////////////////////
+//		// Tarjeta
+//		String pan = "501878200084157306";
+//
+//		/////////////////////////////////////////////////////////////////////////
+//		//schemeID 0 Visa 1 MasterCard
+//		String schemeID = ConstantTlv.MASTER_VALUE_SCHEMEID;
+//		try {
+//			ARQCEmvDataResponse responseKey = new ARQCEmvDataResponse();
+//			System.out.println("----------------------------------------------");
+//			responseKey = HSMOperations.ARQCVerificationAndgenerationARPC(emvData,key,pan,schemeID);
+//			System.out.println("----------------------------------------------");
+//			System.out.println("responseCode: "+ responseKey.getResponseCode());
+//			System.out.println("objectRersponse: "+ responseKey.getDataemvField().toString());
+//			System.out.println("----------------------------------------------");
+//		} catch (Exception e) {	
+//			e.printStackTrace();
+//		}
+//		
 		//b) Genera el digito de chequeo 
         //GenerateaKeyCheckValue("ECAB0BBF46CA06AF661B2D486290E7BF");
 		//c) 
@@ -140,13 +182,17 @@ public class Test {
         //			e.printStackTrace();
         //		}
         // d) translatePINZPKToLMK 
+		
+		
 //	     String responsePinELMK;
 //	     responsePinELMK = translatePINZPKToLMK("75D5BD6ACB4FB723", "820008415730", "274474634FBFF3FF","Single");
-		// System.out.println("responsePinELMK="+responsePinELMK);
+//		 System.out.println("responsePinELMK="+responsePinELMK);
 		//e) generateIBMPinOffSet	
         //IBMOfSetResponse ibmOfSetResponse =  generateIBMPinOffSet("04321", "820008415730");
 		//System.out.println("ibmOfSetResponse="+ibmOfSetResponse.getIBMoffset());
 	}
+	
+	//04321
 	
 	
 	
@@ -226,7 +272,6 @@ public class Test {
 			e.printStackTrace();	
 		}
 		return traslateResponse.substring(4,9);
-        
     }
     
     
@@ -319,11 +364,11 @@ public class Test {
 //		//////////////////////////////////////////////////////////////////////////////////
 //		
 		
-		//String pinBlock = Utils.getPinblock("E5614FF24C765137", "2822", "501878200084157306");
-		
+//		String pinBlock = Utils.getPinblock("E5614FF24C765137", "2822", "501878200084157306");
+//		
 //		System.out.println("pinBlock="+pinBlock);
-		
-		//translatePINZPKToLMK(pinBlock, "820008415730", "B563D6ABD6692220","Single");
+//		
+//		translatePINZPKToLMK(pinBlock, "820008415730", "B563D6ABD6692220","Single");
 		//generateIBMPinOffSet("02822", "820008415730", "2", "D");
     }
     

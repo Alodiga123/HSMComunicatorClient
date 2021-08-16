@@ -25,7 +25,7 @@ public class Constant {
 	//Valores de los archivos properties
 	public static final String IS_DB = "ON";
 	public static final String TRANSPORT_KEK_CHECK_VALUE = "0";
-	public static final String IP_HSM = "192.168.1.4";
+	public static final String IP_HSM = "54.186.53.41";
 	public static final String TEST_USE = "YES";
 	public static final String SQL_VERSION= "SQL 2000";
 	public static final String KEY_BLOCK= "0";
@@ -33,7 +33,7 @@ public class Constant {
 	public static final String HEADER_MESSAGE = "2 byte";
 	public static final String PORT_SERVER="1433";
 	public static final String FIRST_USE="NO";
-	public static final String IP_SERVER="10.11.5.81";
+	public static final String IP_SERVER="54.186.53.41";
 	public static final String THALES_MSG_HEADER="4";
 	public static final Integer PORT_HSM=9998;
 	

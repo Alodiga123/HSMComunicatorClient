@@ -36,6 +36,8 @@ public class ThalesCryptoCommand {
       Commands[15] = "NO";
       Commands[16] = "NC";
       Commands[17] = "CW";
+      Commands[18] = "BI";
+      Commands[19] = "DG";
       
       KeyTypes = new String[50];
       KeyTypes[0] = "000";
@@ -163,10 +165,27 @@ public class ThalesCryptoCommand {
       return message;
    }
    
+   
+   public static String generateBDK(String cryptoLength) {
+	   	 String LengtKey = obtainlenghtkey(cryptoLength);
+	      String message = "00003000"+Commands[18]+";"+"0" +LengtKey  +"0";
+	      return message;
+   }
+   
+   public static String generatePVV(String panFormated, String pinUnderLMK, String PVK) {
+	      String message = "00003000"+Commands[19]+ "U"+PVK+pinUnderLMK+panFormated+"0";
+	      System.out.println("comando:"+ message);
+	      //"E741620A9C289D6241882E8028BCD4B4"
+	      return message;
+    }
+   
+   
    public static String generateKVC() {
 	      String message = "00003000"+ Commands[4]+"0"+KeyTypes[3] + "Z";
 	      return message;
     }
+   
+
   
    public static String generateCVV(String cvk,String pan,String endingDate,String serviceCode) { 
 	   String message = "00003000"+Commands[17]+cvk+pan+";"+endingDate+serviceCode;

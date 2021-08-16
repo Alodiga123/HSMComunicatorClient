@@ -35,9 +35,31 @@ public class GenerateKeyResponse extends GeneralResponse {
 
 	}
 	
+	public GenerateKeyResponse(String responseCode,String responseMessage,String response,String lenghtKey,String v) {
+		super();
+		
+		this.responseCode = responseCode;
+		this.responseMessage = responseMessage;
+		this.header = response.substring(0,4) ;
+	      if (lenghtKey.equals("Single")) {
+	    	  this.keyValue = response.substring(4,response.length());
+	      }
+	      if (lenghtKey.equals("Double")) {
+	    	  this.keyValue = response.substring(4,response.length());
+	      }
+
+	      if (lenghtKey.equals("Triple")) {
+	    	  this.keyValue = response.substring(4,response.length());
+	      }
+
+	}
+	
+	
+	
+	
 	public GenerateKeyResponse(String responseCode,String responseMessage) {
 		super();
-
+	    this.keyValue = responseMessage.substring(responseMessage.length()-57,responseMessage.length()-8);
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
 
